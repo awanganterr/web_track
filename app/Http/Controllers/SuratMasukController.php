@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\ApiResponse;
+
 class SuratMasukController extends Controller
 {
+    use ApiResponse;
+
     protected $suratMasukService;
 
     public function __construct(SuratMasukService $suratMasukService)
@@ -17,16 +21,11 @@ class SuratMasukController extends Controller
         $this->suratMasukService = $suratMasukService;
     }
 
+
     public function index()
     {
         $suratMasuks = $this->suratMasukService->getAll();
-        return view('surat_masuks.index', compact('suratMasuks'));
-    }
-
-    public function create()
-    {
-        Gate::authorize('create', SuratMasuk::class);
-        return view('surat_masuks.create');
+        return $this->successResponse($suratMasuks, 'List Surat Masuk fetched successfully');
     }
 
     public function store(Request $request)
@@ -47,22 +46,15 @@ class SuratMasukController extends Controller
 
         $validated['created_by'] = Auth::id();
 
-        $this->suratMasukService->store($validated);
+        $suratMasuk = $this->suratMasukService->store($validated);
 
-        return redirect()->route('surat-masuk.index')->with('success', 'Surat Masuk berhasil ditambahkan.');
+        return $this->successResponse($suratMasuk, 'Surat Masuk berhasil ditambahkan', 201);
     }
 
     public function show($id)
     {
         $suratMasuk = SuratMasuk::with(['kategori', 'creator'])->findOrFail($id);
-        return view('surat_masuks.show', compact('suratMasuk'));
-    }
-
-    public function edit($id)
-    {
-        $suratMasuk = SuratMasuk::findOrFail($id);
-        Gate::authorize('update', $suratMasuk);
-        return view('surat_masuks.edit', compact('suratMasuk'));
+        return $this->successResponse($suratMasuk, 'Detail Surat Masuk fetched successfully');
     }
 
     public function update(Request $request, $id)
@@ -81,9 +73,9 @@ class SuratMasukController extends Controller
             'kategori_id' => 'required|exists:kategori_surats,id',
         ]);
 
-        $this->suratMasukService->update($id, $validated);
+        $suratMasuk = $this->suratMasukService->update($id, $validated);
 
-        return redirect()->route('surat-masuk.index')->with('success', 'Surat Masuk berhasil diperbarui.');
+        return $this->successResponse($suratMasuk, 'Surat Masuk berhasil diperbarui');
     }
 
     public function destroy($id)
@@ -92,18 +84,18 @@ class SuratMasukController extends Controller
         Gate::authorize('delete', $suratMasuk);
         
         $this->suratMasukService->delete($id);
-        return redirect()->route('surat-masuk.index')->with('success', 'Surat Masuk berhasil dihapus.');
+        return $this->successResponse(null, 'Surat Masuk berhasil dihapus');
     }
 
     public function approve($id)
     {
         $this->suratMasukService->approve($id);
-        return redirect()->back()->with('success', 'Surat Masuk disetujui.');
+        return $this->successResponse(null, 'Surat Masuk disetujui');
     }
 
     public function reject($id)
     {
         $this->suratMasukService->reject($id);
-        return redirect()->back()->with('success', 'Surat Masuk ditolak.');
+        return $this->successResponse(null, 'Surat Masuk ditolak');
     }
 }

@@ -1,59 +1,104 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# WebTrack Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi manajemen surat masuk, surat keluar, dan agenda kegiatan berbasis web menggunakan **Laravel 12**. Aplikasi ini dirancang dengan arsitektur **MVC**, **Service Layer**, dan **Custom CSS Design System** untuk performa tinggi dan tampilan yang bersih.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🏗 Backend Architecture
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Backend dibangun di atas framework Laravel 12 dengan fokus pada *Separation of Concerns* (pemisahan tanggung jawab) dan keamanan berbasis *Role*.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Struktur Database & Model
+Menggunakan MySQL dengan relasi yang terintegrasi:
+- **Users**: Menyimpan data pengguna dengan role (`admin` / `user`).
+- **SuratMasuk**: Tabel surat masuk, berelasi dengan `User` (creator) dan `KategoriSurat`.
+- **SuratKeluar**: Tabel surat keluar, berelasi dengan `User` (creator) dan `KategoriSurat`.
+- **AgendaKegiatan**: Tabel agenda, berelasi dengan `JenisAgenda`.
+- **Fitur Status**: Semua tabel data memiliki kolom `status` (`pending`, `approved`, `rejected`) untuk workflow persetujuan.
 
-## Learning Laravel
+### 2. Service Layer Pattern
+Logika bisnis dipisahkan dari Controller ke dalam **Service Classes** (`App\Services`), menjadikan kode lebih rapi dan reusable:
+- `SuratMasukService`, `SuratKeluarService`, `AgendaService`: Menangani operasi CRUD (Create, Read, Update, Delete) dan logika approval (`approve`/`reject`).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 3. Authentication & Authorization (Roles)
+Keamanan dikelola secara ketat menggunakan sistem bawaan Laravel:
+- **Middleware `admin`**: Membatasi akses rute khusus admin (seperti hapus data permanen atau approve surat).
+- **Policies (`SuratMasukPolicy`, dll)**: Mengontrol hak akses granular di level Method.
+    - **User Biasa**: Bisa membuat Surat Masuk. Bisa edit data sendiri *hanya* jika status masih `pending`. Tidak bisa akses menu Admin.
+    - **Admin**: Full akses untuk membuat semua jenis surat/agenda, mengedit, menghapus, dan menyetujui/menolak pengajuan.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. Approval Workflow
+Sistem memiliki alur kerja persetujuan bawaan:
+1.  **Submission**: User membuat Surat Masuk -> Status otomatis **Pending**.
+2.  **Review**: Admin melihat notifikasi badge merah di sidebar.
+3.  **Action**: Admin membuka detail surat -> Klik **Setujui** atau **Tolak**.
+4.  **Result**: Status berubah menjadi hijau (Disetujui) atau merah (Ditolak).
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🎨 Frontend Architecture
 
-### Premium Partners
+Frontend dibangun menggunakan **Blade Templating Engine** tanpa framework CSS berat (seperti Bootstrap/Tailwind), melainkan menggunakan **Custom CSS Design System** yang efisien dan ringan.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 1. Custom CSS System
+Aplikasi menggunakan sistem CSS modular yang terletak di `public/css/`:
+- **`variables.css`**: Menyimpan "Design Tokens" (Warna utama, ukuran font, spacing, radius border) sebagai CSS Variables (`:root`). Mengubah tema aplikasi cukup dengan mengedit file ini.
+- **`layout.css`**: Mengatur struktur layout utama (Sidebar, Navbar, Responsive Grid) menggunakan Flexbox.
+- **`components.css`**: Menyediakan komponen UI reusable seperti:
+    - `.card`: Kontainer dengan shadow halus.
+    - `.btn`: Tombol modern dengan animasi hover.
+    - `.badge`: Label status warna-warni.
+    - `.table`: Tabel responsif yang rapi.
+- **`utilities.css`**: Kelas bantuan untuk margin/padding cepat.
 
-## Contributing
+### 2. Minimalist Sidebar UI
+Sidebar didesain ulang dengan filosofi **Clean & Minimalist**:
+- **Warna**: Background putih bersih dengan teks abu-abu tua, memberikan kenyamanan visual.
+- **Navigasi**: Menggunakan ikon SVG (Heroicons) yang simpel.
+- **Badge Notifikasi**: Penanda jumlah item `pending` yang muncul otomatis di sebelah kanan menu dengan warna merah mencolok namun rapi.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Blade Components
+- **`x-sidebar`**: Komponen sidebar yang reusable.
+- **`x-navbar`**: Header atas.
+- **`layouts.app`**: Master layout yang membungkus semua konten halaman.
 
-## Code of Conduct
+### 4. JavaScript Enhancements
+- **Password Toggle**: Fitur "intip" password (show/hide) pada halaman login menggunakan Vanilla JS yang ringan.
+- **Confirmation Alerts**: Browser confirm dialog saat Admin melakukan aksi destruktif (Reject/Delete).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🚀 Cara Instalasi
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1.  **Clone Repository**
+    ```bash
+    git clone [repo-url]
+    cd web_track
+    ```
 
-## License
+2.  **Install Dependencies**
+    ```bash
+    composer install
+    ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3.  **Setup Environment**
+    Copy `.env.example` menjadi `.env` dan atur koneksi database Anda.
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+
+4.  **Migrasi & Seeding**
+    Jalankan perintah ini untuk membuat tabel dan mengisi data awal (Admin & User Dummy).
+    ```bash
+    php artisan migrate:fresh --seed
+    ```
+
+5.  **Jalankan Server**
+    ```bash
+    php artisan serve
+    ```
+
+6.  **Login**
+    - **Admin**: `admin@example.com` / `password`
+    - **User**: `user@example.com` / `password`

@@ -5,6 +5,12 @@
 > Since this project uses **Laravel MVC (Web Routes)** with Session Authentication, the endpoints return **HTML** (Views), not JSON.
 > To test in Postman, ensure you handle **Cookies/Sessions** and **CSRF Tokens**.
 
+## Server Configuration
+- **Base URL**: `http://127.0.0.1:8000` (Default Laravel Port)
+- **Headers**:
+    - `X-CSRF-TOKEN`: [Your CSRF Token] (Only if CSRF verification is active)
+    - `Content-Type`: `application/x-www-form-urlencoded` (For POST requests)
+
 ## Authentication
 **Mechanism**: Session Based (Browser Cookies) & CSRF Token.
 
@@ -28,7 +34,7 @@
 ### 2. Create New (Store)
 - **URL**: `/surat-masuk`
 - **Method**: `POST`
-- **Access**: **Admin Only**
+- **Access**: **User & Admin** (Status will be `pending` for User)
 - **Body** (x-www-form-urlencoded / form-data):
     | Key | Type | Requirement | Description |
     |-----|------|-------------|-------------|
@@ -56,6 +62,18 @@
 - **URL**: `/surat-masuk/{id}`
 - **Method**: `DELETE`
 - **Access**: **Admin Only**
+
+### 6. Approve (Admin Only)
+- **URL**: `/surat-masuk/{id}/approve`
+- **Method**: `POST`
+- **Access**: **Admin Only**
+- **Response**: Redirect back with success message. Status becomes `approved`.
+
+### 7. Reject (Admin Only)
+- **URL**: `/surat-masuk/{id}/reject`
+- **Method**: `POST`
+- **Access**: **Admin Only**
+- **Response**: Redirect back with success message. Status becomes `rejected`.
 
 ---
 
@@ -98,6 +116,18 @@
 - **Method**: `DELETE`
 - **Access**: **Admin Only**
 
+### 6. Approve (Admin Only)
+- **URL**: `/surat-keluar/{id}/approve`
+- **Method**: `POST`
+- **Access**: **Admin Only**
+- **Response**: Redirect back with success message. Status becomes `approved`.
+
+### 7. Reject (Admin Only)
+- **URL**: `/surat-keluar/{id}/reject`
+- **Method**: `POST`
+- **Access**: **Admin Only**
+- **Response**: Redirect back with success message. Status becomes `rejected`.
+
 ---
 
 ## Modul: Agenda Kegiatan
@@ -137,3 +167,15 @@
 - **URL**: `/agenda/{id}`
 - **Method**: `DELETE`
 - **Access**: **Admin Only**
+
+### 6. Approve (Admin Only)
+- **URL**: `/agenda/{id}/approve`
+- **Method**: `POST`
+- **Access**: **Admin Only**
+- **Response**: Redirect back with success message. Status becomes `approved`.
+
+### 7. Reject (Admin Only)
+- **URL**: `/agenda/{id}/reject`
+- **Method**: `POST`
+- **Access**: **Admin Only**
+- **Response**: Redirect back with success message. Status becomes `rejected`.

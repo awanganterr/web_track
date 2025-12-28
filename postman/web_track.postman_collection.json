@@ -1,0 +1,681 @@
+{
+    "info": {
+        "name": "Web Track Collection",
+        "description": "Collection for Web Track API based on API_CONTRACT.md",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "var jsonData = pm.response.json();",
+                                    "if (jsonData.status && jsonData.data.token) {",
+                                    "    pm.environment.set(\"token\", jsonData.data.token);",
+                                    "    console.log(\"Token updated\");",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "email",
+                                    "value": "{{email}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "{{password}}",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "login"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/logout",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "logout"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Surat Masuk",
+            "item": [
+                {
+                    "name": "List All",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-masuk",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-masuk"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create New",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "nomor_surat_asal",
+                                    "value": "SURAT-001",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tanggal_surat",
+                                    "value": "2024-01-01",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tanggal_diterima",
+                                    "value": "2024-01-02",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "asal_surat",
+                                    "value": "Dinas Pendidikan",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "perihal",
+                                    "value": "Undangan Rapat",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "kategori_id",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/surat-masuk",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-masuk"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Detail",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-masuk/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-masuk",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "nomor_surat_asal",
+                                    "value": "SURAT-001-UPDATED",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tanggal_surat",
+                                    "value": "2024-01-01",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tanggal_diterima",
+                                    "value": "2024-01-02",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "asal_surat",
+                                    "value": "Dinas Pendidikan",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "perihal",
+                                    "value": "Undangan Rapat Revisi",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "kategori_id",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/surat-masuk/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-masuk",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-masuk/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-masuk",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Approve",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-masuk/1/approve",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-masuk",
+                                "1",
+                                "approve"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Reject",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-masuk/1/reject",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-masuk",
+                                "1",
+                                "reject"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Surat Keluar",
+            "item": [
+                {
+                    "name": "List All",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-keluar",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-keluar"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create New",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "nomor_surat",
+                                    "value": "OUT-001",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tanggal_surat",
+                                    "value": "2024-01-05",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tujuan_surat",
+                                    "value": "Kantor Gubernur",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "perihal",
+                                    "value": "Laporan Bulanan",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "kategori_id",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/surat-keluar",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-keluar"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Detail",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-keluar/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-keluar",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "nomor_surat",
+                                    "value": "OUT-001-REV",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tanggal_surat",
+                                    "value": "2024-01-05",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tujuan_surat",
+                                    "value": "Kantor Gubernur",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "perihal",
+                                    "value": "Laporan Bulanan Revisi",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "kategori_id",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/surat-keluar/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-keluar",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-keluar/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-keluar",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Approve",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-keluar/1/approve",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-keluar",
+                                "1",
+                                "approve"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Reject",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/surat-keluar/1/reject",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "surat-keluar",
+                                "1",
+                                "reject"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "Agenda Kegiatan",
+            "item": [
+                {
+                    "name": "List All",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/agenda",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "agenda"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Create New",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "nama_kegiatan",
+                                    "value": "Rapat Koordinasi",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "waktu_mulai",
+                                    "value": "2024-02-01 09:00:00",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "waktu_selesai",
+                                    "value": "2024-02-01 12:00:00",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tempat",
+                                    "value": "Aula Utama",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "keterangan",
+                                    "value": "Wajib hadir",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "jenis_agenda_id",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/agenda",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "agenda"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Detail",
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/agenda/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "agenda",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update",
+                    "request": {
+                        "method": "PUT",
+                        "header": [],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "nama_kegiatan",
+                                    "value": "Rapat Koordinasi (Diundur)",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "waktu_mulai",
+                                    "value": "2024-02-01 13:00:00",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "waktu_selesai",
+                                    "value": "2024-02-01 15:00:00",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tempat",
+                                    "value": "Aula Utama",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "keterangan",
+                                    "value": "Wajib hadir tepat waktu",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "jenis_agenda_id",
+                                    "value": "1",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/agenda/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "agenda",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/agenda/1",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "agenda",
+                                "1"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Approve",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/agenda/1/approve",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "agenda",
+                                "1",
+                                "approve"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Reject",
+                    "request": {
+                        "method": "POST",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/agenda/1/reject",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "agenda",
+                                "1",
+                                "reject"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

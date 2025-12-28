@@ -8,8 +8,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\ApiResponse;
+
 class AgendaKegiatanController extends Controller
 {
+    use ApiResponse;
+
     protected $agendaService;
 
     public function __construct(AgendaKegiatanService $agendaService)
@@ -17,16 +21,11 @@ class AgendaKegiatanController extends Controller
         $this->agendaService = $agendaService;
     }
 
+
     public function index()
     {
         $agendas = $this->agendaService->getAll();
-        return view('agenda_kegiatans.index', compact('agendas'));
-    }
-
-    public function create()
-    {
-        Gate::authorize('create', AgendaKegiatan::class);
-        return view('agenda_kegiatans.create');
+        return $this->successResponse($agendas, 'List Agenda fetched successfully');
     }
 
     public function store(Request $request)
@@ -44,22 +43,15 @@ class AgendaKegiatanController extends Controller
 
         $validated['created_by'] = Auth::id();
 
-        $this->agendaService->store($validated);
+        $agenda = $this->agendaService->store($validated);
 
-        return redirect()->route('agenda.index')->with('success', 'Agenda berhasil ditambahkan.');
+        return $this->successResponse($agenda, 'Agenda berhasil ditambahkan', 201);
     }
 
     public function show($id)
     {
         $agenda = AgendaKegiatan::with(['jenisAgenda', 'creator'])->findOrFail($id);
-        return view('agenda_kegiatans.show', compact('agenda'));
-    }
-
-    public function edit($id)
-    {
-        $agenda = AgendaKegiatan::findOrFail($id);
-        Gate::authorize('update', $agenda);
-        return view('agenda_kegiatans.edit', compact('agenda'));
+        return $this->successResponse($agenda, 'Detail Agenda fetched successfully');
     }
 
     public function update(Request $request, $id)
@@ -76,9 +68,9 @@ class AgendaKegiatanController extends Controller
             'jenis_agenda_id' => 'required|exists:jenis_agendas,id',
         ]);
 
-        $this->agendaService->update($id, $validated);
+        $agenda = $this->agendaService->update($id, $validated);
 
-        return redirect()->route('agenda.index')->with('success', 'Agenda berhasil diperbarui.');
+        return $this->successResponse($agenda, 'Agenda berhasil diperbarui');
     }
 
     public function destroy($id)
@@ -87,18 +79,18 @@ class AgendaKegiatanController extends Controller
         Gate::authorize('delete', $agenda);
 
         $this->agendaService->delete($id);
-        return redirect()->route('agenda.index')->with('success', 'Agenda berhasil dihapus.');
+        return $this->successResponse(null, 'Agenda berhasil dihapus');
     }
 
     public function approve($id)
     {
         $this->agendaService->approve($id);
-        return redirect()->back()->with('success', 'Agenda disetujui.');
+        return $this->successResponse(null, 'Agenda disetujui');
     }
 
     public function reject($id)
     {
         $this->agendaService->reject($id);
-        return redirect()->back()->with('success', 'Agenda ditolak.');
+        return $this->successResponse(null, 'Agenda ditolak');
     }
 }

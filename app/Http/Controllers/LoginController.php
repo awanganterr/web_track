@@ -5,12 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Traits\ApiResponse;
+
 class LoginController extends Controller
 {
-    public function showLoginForm()
-    {
-        return view('auth.login');
-    }
+    use ApiResponse;
+
+    // public function showLoginForm()
+    // {
+    //     return view('auth.login');
+    // }
 
     public function login(Request $request)
     {
@@ -20,20 +24,22 @@ class LoginController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended('dashboard');
+            $user = Auth::user();
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return $this->successResponse([
+                'user' => $user,
+                'token' => $token,
+                'token_type' => 'Bearer'
+            ], 'Login success');
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return $this->errorResponse('The provided credentials do not match our records.', 401);
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/');
+        $request->user()->currentAccessToken()->delete();
+        return $this->successResponse(null, 'Logout success');
     }
 }
